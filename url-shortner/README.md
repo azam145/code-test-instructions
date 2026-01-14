@@ -58,6 +58,11 @@ Observability: "I would integrate OpenTelemetry for distributed tracing across t
    - Security: Sanitize the "Custom Alias" to prevent XSS or Path Traversal (e.g., a user trying to set an alias as ../../etc/passwd).
    - Length: Limit the original URL length (e.g., 2048 chars) to prevent "Database Bloat" attacks. 
 
+
+## Implimnetation decsiion
+For this assessment, I've used hibernate.ddl-auto=update for rapid prototyping. However, in a production-grade system, I would implement Flyway or Liquibase. 
+This allows us to have version-controlled SQL migration scripts, ensuring that database changes are predictable, auditable, and safe across different environments (Dev, QA, Prod).
+
 ## High Availability and Fault Tolerance
 
 Multiple Availability Zones on AWS (Europe/America)
