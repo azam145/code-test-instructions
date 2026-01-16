@@ -146,7 +146,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${project.build.directory}/generated-sources/openapi/src/main/java</source>
+								<source>${project.build.directory}/generated-sources/openapi/java</source>
 							</sources>
 						</configuration>
 					</execution>

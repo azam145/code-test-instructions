@@ -1,14 +1,18 @@
-package com.tximpact.url_shortner.service;
+package com.tpximpact.urlshortener.service;
 
-import com.tximpact.url_shortner.TestcontainersConfiguration;
-import com.tximpact.url_shortner.model.UrlEntity;
+import com.tpximpact.urlshortener.TestcontainersConfiguration;
+import com.tpximpact.urlshortener.model.UrlEntity;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 @Import(TestcontainersConfiguration.class) // Uses your real Postgres container
@@ -19,6 +23,7 @@ class UrlServiceTest {
     private UrlService urlService;
 
     @Test
+    @DisplayName("Should Save And Retrieve URL")
     void shouldSaveAndRetrieveUrl() {
         // Given
         String originalUrl = "https://www.tpximpact.com/careers";
@@ -35,10 +40,20 @@ class UrlServiceTest {
     }
 
     @Test
+    @DisplayName("Should Allow Custom Alias")
     void shouldAllowCustomAlias() {
         String custom = "my-custom-link";
         UrlEntity saved = urlService.createShortUrl("https://google.com", custom);
 
         assertThat(saved.getShortAlias()).isEqualTo(custom);
     }
+
+    @Test
+    @DisplayName("Should throw exception when deleting non-existent alias")
+    void shouldThrowExceptionOnNonExistentDelete() {
+        assertThatThrownBy(() -> urlService.deleteUrl("non-existent"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("not found");
+    }
+
 }

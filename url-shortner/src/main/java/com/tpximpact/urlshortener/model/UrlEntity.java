@@ -1,4 +1,4 @@
-package com.tximpact.url_shortner.model;
+package com.tpximpact.urlshortener.model;
 
 import jakarta.persistence.*;
 import lombok.*;

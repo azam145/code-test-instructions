@@ -1,4 +1,4 @@
-package com.tximpact.url_shortner;
+package com.tpximpact.urlshortener;
 
 import org.springframework.boot.SpringApplication;
 

@@ -1,7 +1,8 @@
-package com.tximpact.url_shortner.repository;
+package com.tpximpact.urlshortener.repository;
 
-import com.tximpact.url_shortner.TestcontainersConfiguration;
-import com.tximpact.url_shortner.model.UrlEntity;
+import com.tpximpact.urlshortener.TestcontainersConfiguration;
+import com.tpximpact.urlshortener.model.UrlEntity;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,6 +13,7 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
 @Import(TestcontainersConfiguration.class)
@@ -22,6 +24,7 @@ class UrlRepositoryTest {
     private UrlRepository urlRepository;
 
     @Test
+    @DisplayName("Should find by short URL")
     void shouldFindByShortAlias() {
         // Given
         UrlEntity entity = UrlEntity.builder()
@@ -40,8 +43,28 @@ class UrlRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should Return Empty When Alias Does Not Exist")
     void shouldReturnEmptyWhenAliasDoesNotExist() {
         Optional<UrlEntity> found = urlRepository.findByShortAlias("nonexistent");
         assertThat(found).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should delete an existing URL")
+    void shouldDeleteExistingUrl() {
+        // Given
+        String alias = "del123";
+        UrlEntity entity = UrlEntity.builder()
+                .originalUrl("https://example.com")
+                .shortAlias(alias)
+                .createdAt(OffsetDateTime.now())
+                .build();
+        urlRepository.save(entity);
+
+        // When
+        urlRepository.deleteByShortAlias(alias);
+
+        // Then
+        assertThat(urlRepository.existsByShortAlias(alias)).isFalse();
     }
 }

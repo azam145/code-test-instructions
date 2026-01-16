@@ -1,8 +1,8 @@
-package com.tximpact.url_shortner.service;
+package com.tpximpact.urlshortener.service;
 
-import com.tximpact.url_shortner.model.UrlEntity;
-import com.tximpact.url_shortner.repository.UrlRepository;
-import com.tximpact.url_shortner.util.AliasGenerator;
+import com.tpximpact.urlshortener.model.UrlEntity;
+import com.tpximpact.urlshortener.repository.UrlRepository;
+import com.tpximpact.urlshortener.util.AliasGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,6 +50,22 @@ public class UrlService {
                 .orElseThrow(() -> new RuntimeException("URL with alias '" + alias + "' not found."));
     }
 
+    @Transactional // Required for delete operations
+    public void deleteUrl(String alias) {
+        log.info("Attempting to delete URL with alias: {}", alias);
+
+        // 1. Check if it exists first
+        if (!urlRepository.existsByShortAlias(alias)) {
+            log.error("Delete failed: Alias {} not found", alias);
+            // This will be caught by your GlobalExceptionHandler and turned into a 404
+            throw new RuntimeException("URL with alias '" + alias + "' not found.");
+        }
+
+        // 2. Perform the delete
+        urlRepository.deleteByShortAlias(alias);
+        log.info("Successfully deleted alias: {}", alias);
+    }
+
     private String generateUniqueRandomAlias() {
         for (int i = 0; i < MAX_RETRIES; i++) {
             String alias = AliasGenerator.generate(7);
@@ -60,4 +76,5 @@ public class UrlService {
         }
         throw new IllegalStateException("Failed to generate a unique alias after " + MAX_RETRIES + " attempts.");
     }
+
 }

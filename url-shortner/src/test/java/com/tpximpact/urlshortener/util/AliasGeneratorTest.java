@@ -1,4 +1,4 @@
-package com.tximpact.url_shortner.util;
+package com.tpximpact.urlshortener.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

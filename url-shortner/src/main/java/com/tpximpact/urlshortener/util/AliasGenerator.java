@@ -1,4 +1,4 @@
-package com.tximpact.url_shortner.util;
+package com.tpximpact.urlshortener.util;
 
 
 public class AliasGenerator {

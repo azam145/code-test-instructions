@@ -1,4 +1,4 @@
-package com.tximpact.url_shortner;
+package com.tpximpact.urlshortener;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

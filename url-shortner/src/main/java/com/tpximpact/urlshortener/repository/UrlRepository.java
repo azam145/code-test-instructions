@@ -1,6 +1,6 @@
-package com.tximpact.url_shortner.repository;
+package com.tpximpact.urlshortener.repository;
 
-import com.tximpact.url_shortner.model.UrlEntity;
+import com.tpximpact.urlshortener.model.UrlEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
@@ -15,4 +15,7 @@ public interface UrlRepository extends JpaRepository<UrlEntity, Long> {
     Optional<UrlEntity> findByOriginalUrl(String originalUrl);
 
     boolean existsByShortAlias(String shortAlias);
+    // Derived delete query
+    void deleteByShortAlias(String shortAlias);
+
 }
