@@ -1,0 +1,34 @@
+services:
+  # --- Database Service ---
+  db:
+    image: postgres:16-alpine # Lead Tip: Use a specific version and Alpine for a smaller footprint
+    container_name: url-shortener-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: urlshortener
+    ports:
+      - "5432:5432" # Maps host 5432 to container 5432
+    healthcheck: # Critical for orchestration
+      test: ["CMD-SHELL", "pg_isready -U user -d urlshortener"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- Your Spring Boot Application ---
+  app:
+    build: . # Tells Docker to use the Dockerfile in the current directory
+    container_name: url-shortener-app
+    ports:
+      - "8080:8080"
+    environment:
+      # We use 'db' (the service name above) instead of 'localhost'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/urlshortener
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # Inject the base URL for the shortened links
+      APP_BASE_URL: http://localhost:8080/
+    depends_on:
+      db:
+        condition: service_healthy # Wait until DB is actually ready, not just started

@@ -63,6 +63,16 @@ Observability: "I would integrate OpenTelemetry for distributed tracing across t
 For this assessment, I've used hibernate.ddl-auto=update for rapid prototyping. However, in a production-grade system, I would implement Flyway or Liquibase. 
 This allows us to have version-controlled SQL migration scripts, ensuring that database changes are predictable, auditable, and safe across different environments (Dev, QA, Prod).
 
+## How to Run Backend
+1. git clone
+2. docker compose up
+3. Profit.
+
+## How to Run the Whole Stack
+docker compose up --build
+Open http://localhost:5173 for the UI.
+Open http://localhost:8080/swagger-ui/index.html for the API docs.
+
 ## High Availability and Fault Tolerance
 
 Multiple Availability Zones on AWS (Europe/America)
