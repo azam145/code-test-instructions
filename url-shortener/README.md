@@ -79,6 +79,58 @@ docker compose up --build
 Open http://localhost:5173 for the UI.
 Open http://localhost:8080/swagger-ui/index.html for the API docs.
 
+## Example usage
+Once the stack is running via docker compose up, you can interact with the system via the UI or the REST API.
+1. Web Interface (End-User Flow)
+   The frontend is designed following GOV.UK Design System standards for accessibility and clarity.
+   Navigate to: http://localhost:5173
+   Shorten a URL:
+   Enter a long URL (e.g., https://www.tpximpact.com/careers).
+   (Optional) Enter a custom alias (e.g., tpx-jobs).
+   Click "Shorten URL".
+   Use the Link:
+   The shortened link will appear. Click "Copy link" to save it to your clipboard.
+   Manage Links:
+   Navigate to the "Manage" tab.
+   Enter an existing alias and click "Delete Link" to remove it from the system.
+2. REST API (Technical Integration)
+   For programmatic access, the API follows RESTful standards. Below are examples using curl.
+   A. Create a Shortened URL
+   Endpoint: POST /shorten
+   code
+   Bash
+   curl -X POST http://localhost:8080/shorten \
+   -H "Content-Type: application/json" \
+   -d '{
+   "fullUrl": "https://www.tpximpact.com",
+   "customAlias": "impact-link"
+   }'
+   Expected Response (201 Created):
+   code
+   JSON
+   {
+   "alias": "impact-link",
+   "shortUrl": "http://localhost:8080/impact-link"
+   }
+   B. Access a Redirect
+   Endpoint: GET /{alias}
+   code
+   Bash
+3. 
+# Use -I to see the HTTP headers
+curl -I http://localhost:8080/impact-link
+Expected Response (302 Found):
+HTTP/1.1 302 Found
+Location: https://www.tpximpact.com
+C. Delete an Alias
+Endpoint: DELETE /{alias}
+code
+Bash
+curl -X DELETE http://localhost:8080/impact-link
+Expected Response (204 No Content):
+HTTP/1.1 204 No Content
+
+
 ## High Availability and Fault Tolerance
 
 Multiple Availability Zones on AWS (Europe/America)
