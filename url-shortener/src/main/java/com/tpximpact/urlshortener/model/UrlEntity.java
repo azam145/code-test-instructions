@@ -1,6 +1,9 @@
 package com.tpximpact.urlshortener.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.OffsetDateTime;
 
@@ -16,6 +19,9 @@ public class UrlEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Original URL is required")
+    @Size(max = 2048)
+    @Pattern(regexp = "^https?://.*", message = "Must be a valid HTTP or HTTPS URL")
     private String originalUrl;
 
     @Column(unique = true)

@@ -1,5 +1,6 @@
 package com.tpximpact.urlshortener.controller;
 
+import com.tpximpact.urlshortener.model.ErrorResponse;
 import com.tpximpact.urlshortener.model.UrlEntity;
 import com.tpximpact.urlshortener.service.UrlService;
 import com.tpximpact.urlshortener.model.ShortenPostRequest;
@@ -53,7 +54,7 @@ class UrlControllerTest {
 
     @Test
     @DisplayName("POST /shorten should return 201 Created and the shortened URL")
-    void shouldCreateShortUrl() throws Exception {
+    void shouldCreateShortUrl() throws Exception, ErrorResponse {
         // Given
         ShortenPostRequest request = new ShortenPostRequest();
         request.setFullUrl("https://google.com");

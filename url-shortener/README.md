@@ -52,14 +52,20 @@ Observability: "I would integrate OpenTelemetry for distributed tracing across t
    The Reasoning: When a user provides a custom alias that exists, the system shouldn't just throw a 500 error. It should return a 409 Conflict. 
    This is an LLD decision that improves the User Experience by allowing the frontend to say, "Sorry, that name is taken."
 4. Validation Strategy
+   Observation: The provided openapi.yaml lacked formal validation constraints (patterns, min/max lengths).
    Decision: Multilayered Validation.
-   The Reasoning:
+
+   - Controller - using spring-boot-starter-validation - this would be done with additions in open api - validates format/syntax (cheap, fail-fast)
+   - Service Layer: validates business rules (already exists, permissions, etc.) and protect against "Database Bloat" by capping input lengths.
+     As it is not possible to validate in controller as I dont want to modify open-api contract I will validation in service layer.
+   - Frontend: Implemented regex-based sanitization for custom aliases to prevent path-traversal attempts and improve UX.
+   - Outcome: This ensures the system remains robust and secure even if the API contract is loosely defined.
    - Syntax: Use @URL validation to ensure the input is a valid web address.
    - Security: Sanitize the "Custom Alias" to prevent XSS or Path Traversal (e.g., a user trying to set an alias as ../../etc/passwd).
    - Length: Limit the original URL length (e.g., 2048 chars) to prevent "Database Bloat" attacks. 
 
 
-## Implimnetation decsiion
+## Implimnetation decsion
 For this assessment, I've used hibernate.ddl-auto=update for rapid prototyping. However, in a production-grade system, I would implement Flyway or Liquibase. 
 This allows us to have version-controlled SQL migration scripts, ensuring that database changes are predictable, auditable, and safe across different environments (Dev, QA, Prod).
 

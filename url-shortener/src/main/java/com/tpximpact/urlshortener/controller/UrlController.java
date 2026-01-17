@@ -3,9 +3,7 @@ package com.tpximpact.urlshortener.controller;
 import com.tpximpact.urlshortener.api.AliasApi;
 import com.tpximpact.urlshortener.api.ShortenApi;
 import com.tpximpact.urlshortener.api.UrlsApi;
-import com.tpximpact.urlshortener.model.ShortenPost201Response;
-import com.tpximpact.urlshortener.model.ShortenPostRequest;
-import com.tpximpact.urlshortener.model.UrlsGet200ResponseInner;
+import com.tpximpact.urlshortener.model.*;
 import com.tpximpact.urlshortener.service.UrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,14 +37,19 @@ public class UrlController implements UrlsApi, ShortenApi, AliasApi {
     @Override
     public ResponseEntity<ShortenPost201Response> shortenPost(ShortenPostRequest shortenPostRequest) {
         // Delegate to our Service
-        var entity = urlService.createShortUrl(
-                shortenPostRequest.getFullUrl(),
-                shortenPostRequest.getCustomAlias()
-        );
+        UrlEntity entity = null;
+        try {
+            entity = urlService.createShortUrl(
+                    shortenPostRequest.getFullUrl(),
+                    shortenPostRequest.getCustomAlias()
+            );
+        } catch (ErrorResponse e) {
+            throw new RuntimeException(e);
+        }
 
         // Build the Response DTO
         ShortenPost201Response response = new ShortenPost201Response();
-        response.setShortUrl("http://localhost:8080/" + entity.getShortAlias());
+        response.setShortUrl(baseUrl + entity.getShortAlias());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
